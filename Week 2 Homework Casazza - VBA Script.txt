@@ -1,0 +1,164 @@
+Sub stocks():
+'Getting the last row, determining the volumes, and finding the opening volume columns
+    lastRow = Cells(Rows.Count, "A").End(xlUp).Row
+    volTotal = 0
+    openVal = Cells(2, "C").Value
+    
+'Creating a for loop to loop through all of the rows in the "ticker" column - for each change in the ticker column, only identify the distinct names
+    For i = 2 To lastRow
+    volTotal = volTotal + CLng(Cells(i, "G").Value)
+    ticker = Cells(i, "A").Value
+    
+'Finding the last row instead of searching for it
+    If ticker <> Cells(i + 1, "A").Value Then
+    lastRowK = Cells(Rows.Count, "K").End(xlUp).Row + 1
+    
+'Placing where the volume total, open/close change and yearly open/close percent change
+    Cells(lastRowK, "K").Value = ticker
+    Cells(lastRowK, "N").Value = volTotal
+    closeVal = Cells(i, "F").Value
+    Cells(lastRowK, "L").Value = closeVal - openVal
+    closeVal = Cells(i, "F").Value
+    Cells(lastRowK, "M").Value = (closeVal - openVal) / closeVal
+    
+    volTotal = 0
+    
+    End If
+      Next i
+
+Cells(1, "K").Value = "Ticker"
+Cells(1, "L").Value = "Yearly Change"
+Cells(1, "M").Value = "Percent Change"
+Cells(1, "N").Value = "Total Stock Volume"
+
+End Sub
+
+_______________
+
+
+Sub SmallestPercent()
+'Identifying the parameters and values
+Dim rng As Range
+Dim dblMin As Double
+Dim ticker_low As String
+Dim ticker_high As String
+
+
+'Set range to search for the smallest value
+Set rng = Sheet1.Range("M2:M290")
+
+
+
+'Worksheet function MIN returns the smallest value in a range
+dblMin = Application.WorksheetFunction.Min(rng)
+
+
+'Displays smallest value
+MsgBox dblMin
+
+Cells(3, 18).Value = dblMin
+Cells(3, 16).Value = "Lowest % Change"
+Cells(3, 17).Value = ticker
+
+
+End Sub
+
+_______________
+
+
+ 
+Sub LargestPercent()
+'Identifying the parameters and values
+Dim rng As Range
+Dim dblMin As Double
+
+
+'Set range to search for the largest value
+Set rng = Sheet1.Range("M2:M290")
+
+
+'Worksheet function MAX returns the largest value in a range
+dblMax = Application.WorksheetFunction.Max(rng)
+
+'Displays largest value
+MsgBox dblMax
+
+Cells(2, 18).Value = dblMax
+Cells(2, 16).Value = "Greatest % Change"
+
+
+
+
+End Sub
+
+_______________
+
+Sub GreatestVolume()
+'Identifying the parameters and values
+Dim rng As Range
+Dim dblMin As Double
+
+
+'Set range to search for the largest value
+Set rng = Sheet1.Range("N2:N290")
+
+
+
+'Worksheet function MAX returns the largest value in a range
+dblMax = Application.WorksheetFunction.Max(rng)
+
+
+'Displays largest value
+MsgBox dblMax
+
+Cells(4, 18).Value = dblMax
+Cells(4, 16).Value = "Greatest Total Volume"
+
+
+
+
+End Sub
+
+
+_______________
+
+Sub coloring()
+Dim rg1 As Range
+Dim rg2 As Range
+Dim cond1 As FormatCondition, cond2 As FormatCondition, cond3 As FormatCondition, cond4 As FormatCondition
+Set rg1 = Range("L2", Range("L2").End(xlDown))
+Set rg2 = Range("M2", Range("M2").End(xlDown))
+ 
+'clear any existing conditional formatting
+rg1.FormatConditions.Delete
+rg2.FormatConditions.Delete
+ 
+'define the rule for each conditional format
+Set cond1 = rg1.FormatConditions.Add(xlCellValue, xlGreater, "=0")
+Set cond2 = rg1.FormatConditions.Add(xlCellValue, xlLess, "=0")
+Set cond3 = rg2.FormatConditions.Add(xlCellValue, xlGreater, "=0")
+Set cond4 = rg2.FormatConditions.Add(xlCellValue, xlLess, "=0")
+
+ 
+'define the format applied for each conditional format
+With cond1
+.Interior.color = vbGreen
+.Font.color = vbBlack
+End With
+ 
+With cond2
+.Interior.color = vbRed
+.Font.color = vbBlack
+End With
+ 
+With cond3
+.Interior.color = vbGreen
+.Font.color = vbBlack
+End With
+ 
+With cond4
+.Interior.color = vbRed
+.Font.color = vbBlack
+End With
+
+End Sub
